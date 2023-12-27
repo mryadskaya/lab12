@@ -2,21 +2,38 @@
 # -*- coding: utf-8 -*-
 
 
-def brackets_check(s):
-    meetings = 0
-    for c in s:
-        if c == '(':
-            meetings += 1
-        elif c == ')':
-            meetings -= 1
-            if meetings < 0:
-                return False
+def is_correct_brackets(string):
 
-    return meetings == 0
+    if len(string) == 0:
+        return True
+
+    if string.count('(') != string.count(')'):
+        return False
+
+    index = string.index('(')
+    pair_index = find_closing_bracket(string, index)
+
+    if pair_index == -1:
+        return False
+
+    if not is_correct_brackets(string[index + 1: pair_index]):
+        return False
+
+    return is_correct_brackets(string[pair_index + 1:])
+
+def find_closing_bracket(string, start):
+    count = 0
+
+    for i in range(start, len(string)):
+        if string[i] == '(':
+            count += 1
+        elif string[i] == ')':
+            count -= 1
+
+        if count == 0:
+            return i
+
+    return -1
 
 
-if __name__ == '__main__':
-    if brackets_check(input('Введите строку: ')):
-        print('True')
-    else:
-        print('False')
+print(is_correct_brackets(input("Введите строку со скобками: ")))
